@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shane Foundation | Maternal & Contraceptive Blood Clot Awareness</title>
+    <meta name="description" content="Dedicated to saving lives by raising awareness, providing patient education, and supporting research on pregnancy, postpartum, contraceptive, and fetal blood clotting risks.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf2f4',
+                            100: '#fbe6e9',
+                            200: '#f7cfd6',
+                            300: '#f1a9b7',
+                            400: '#e7788f',
+                            500: '#d94968',
+                            600: '#c42b4d',
+                            700: '#a41f3b',
+                            800: '#891d35',
+                            900: '#731c31',
+                            950: '#410b17',
+                        },
+                        navy: {
+                            800: '#1e293b',
+                            850: '#172033',
+                            900: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'serif'],
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .focus-visible-ring:focus-visible {
+            outline: 3px solid #c42b4d;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans flex flex-col min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const Icon = ({ name, className = "w-5 h-5", ...props }) => {
+            const icons = {
+                "wind": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2" />
+                        <path d="M9.6 4.6A2 2 0 1 1 11 8H2" />
+                        <path d="M12.6 19.4A2 2 0 1 0 14 16H2" />
+                    </svg>
+                ),
+                "activity": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                ),
+                "brain": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+                        <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+                        <path d="M12 5v13" />
+                    </svg>
+                ),
+                "heart-pulse": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+                    </svg>
+                ),
+                "baby": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M9 12h.01" /><path d="M15 12h.01" />
+                        <path d="M10 16c.5.5 1.5 1 2 1s1.5-.5 2-1" />
+                        <path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 5 6.3" />
+                    </svg>
+                ),
+                "alert-triangle": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                        <path d="M12 9v4" /><path d="M12 17h.01" />
+                    </svg>
+                ),
+                "zap": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                ),
+                "alert-circle": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                ),
+                "check-circle-2": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" />
+                    </svg>
+                ),
+                "check-circle": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                ),
+                "check": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                ),
+                "shield-alert": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                        <line x1="12" x2="12" y1="8" y2="12" />
+                        <line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                ),
+                "arrow-right": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                    </svg>
+                ),
+                "chevron-down": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                ),
+                "chevron-up": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polyline points="18 15 12 9 6 15" />
+                    </svg>
+                ),
+                "chevron-right": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                ),
+                "eye": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                ),
+                "menu": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" />
+                    </svg>
+                ),
+                "x": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                ),
+                "pill": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" />
+                        <line x1="8.5" y1="8.5" x2="15.5" y2="15.5" />
+                    </svg>
+                ),
+                "heart": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                ),
+                "search": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                ),
+                "alert-octagon": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
+                        <line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                ),
+                "facebook": (
+                    <svg className={className} fill="currentColor" viewBox="0 0 24 24" {...props}>
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                ),
+                "instagram": (
+                    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                    </svg>
+                )
+            };
+
+            return icons[name] || icons["check-circle"];
+        };
+
+        const trackConversion = (eventName, eventData = {}) => {
+            console.log(`[Google Analytics / Ad Grant Event Tracked]: ${eventName}`, eventData);
+            const banner = document.getElementById('analytics-toast');
+            if (banner) {
+                banner.innerText = `[Conversion Tracked]: ${eventName}`;
+                banner.classList.remove('translate-y-full', 'opacity-0');
+                setTimeout(() => {
+                    banner.classList.add('translate-y-full', 'opacity-0');
+                }, 3500);
+            }
+        };
+
+        function App() {
+            const [currentPath, setCurrentPath] = useState('home');
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [mobileLearnOpen, setMobileLearnOpen] = useState(false);
+            const [highContrast, setHighContrast] = useState(false);
+            const [donateModalOpen, setDonateModalOpen] = useState(false);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [selectedCategory, setSelectedCategory] = useState('All');
+            const [contactSubmitted, setContactSubmitted] = useState(false);
+            const [donationSuccess, setDonationSuccess] = useState(false);
+
+            const navigateTo = (path) => {
+                setCurrentPath(path);
+                setMobileMenuOpen(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                trackConversion('page_view', { page: path });
+            };
+
+            const warningSignsList = [
+                {
+                    title: "Shortness of Breath",
+                    description: "Persistent or unexplained difficulty breathing or rapid shortness of breath upon mild activity.",
+                    category: "Pulmonary / Critical",
+                    icon: "wind",
+                    urgent: true
+                },
+                {
+                    title: "Limb Swelling & Pain",
+                    description: "Swelling, redness, severe aching pain, or skin that is warm to the touch in your leg, thigh, or arm.",
+                    category: "Deep Vein Thrombosis (DVT)",
+                    icon: "activity",
+                    urgent: true
+                },
+                {
+                    title: "Persistent Increasing Headache",
+                    description: "Persistent, worsening headache over several days, potentially accompanied by visual disturbances, dizziness, or confusion.",
+                    category: "Cerebral Venous Thrombosis (CVT)",
+                    icon: "brain",
+                    urgent: true
+                },
+                {
+                    title: "Chest Pain or Pressure",
+                    description: "Chest pain, heaviness, tightness, or an irregular/racing heartbeat, especially when taking a deep breath.",
+                    category: "Pulmonary Embolism (PE)",
+                    icon: "heart-pulse",
+                    urgent: true
+                },
+                {
+                    title: "Reduced Fetal Movement",
+                    description: "Noticeable or sudden decrease in fetal movement during the 3rd trimester of pregnancy.",
+                    category: "Fetal Health / Placental Clotting",
+                    icon: "baby",
+                    urgent: true
+                },
+                {
+                    title: "Sudden Severe Headache",
+                    description: "Abrupt, severe 'thunderclap' headache unlike any previously experienced.",
+                    category: "Neurological / CVT",
+                    icon: "alert-triangle",
+                    urgent: true
+                },
+                {
+                    title: "Fainting or Severe Anxiety",
+                    description: "Fainting spells, sudden dizziness, or an inexplicable surge of extreme anxiety accompanied by rapid heart rate.",
+                    category: "Systemic",
+                    icon: "zap",
+                    urgent: false
+                },
+                {
+                    title: "Coughing Up Blood",
+                    description: "Coughing accompanied by blood-tinged sputum or mucus.",
+                    category: "Pulmonary Embolism (PE)",
+                    icon: "alert-circle",
+                    urgent: true
+                }
+            ];
+
+            const educationalResources = [
+                {
+                    id: 'res-1',
+                    title: 'Understanding Pregnancy & Postpartum Blood Clot Risks',
+                    category: 'Pregnancy & Postpartum',
+                    summary: 'Learn why pregnancy increases blood clotting tendencies up to 5x and how to recognize early postpartum warning signs.',
+                    type: 'Guide & Factsheet',
+                    readTime: '6 min read',
+                    slug: 'pregnancy-blood-clots'
+                },
+                {
+                    id: 'res-2',
+                    title: 'Hormone-Based Birth Control & Blood Clot Safety',
+                    category: 'Birth Control',
+                    summary: 'An educational breakdown of how estrogen-containing oral contraceptives, patches, and rings impact coagulation.',
+                    type: 'Educational Brief',
+                    readTime: '5 min read',
+                    slug: 'birth-control-blood-clot-risks'
+                },
+                {
+                    id: 'res-3',
+                    title: 'Placental Clotting & Fetal Health Outcomes',
+                    category: 'Fetal Health',
+                    summary: 'How maternal blood-clotting disorders affect placental perfusion, fetal birth weight, and pregnancy preservation.',
+                    type: 'Research Summary',
+                    readTime: '8 min read',
+                    slug: 'fetal-health-clot-risks'
+                },
+                {
+                    id: 'res-4',
+                    title: 'Maternal Warning Signs Downloadable Pocket Checklist',
+                    category: 'Warning Signs',
+                    summary: 'A quick-reference guide for expectant parents, partners, and postpartum families to keep on hand.',
+                    type: 'PDF Download',
+                    readTime: 'Download',
+                    slug: 'warning-signs'
+                },
+                {
+                    id: 'res-5',
+                    title: 'Questions to Ask Your OB/GYN About Clotting Risk',
+                    category: 'Patient Advocacy',
+                    summary: 'Empower yourself during prenatal visits with specific questions regarding family history and clotting panel screenings.',
+                    type: 'Checklist',
+                    readTime: '4 min read',
+                    slug: 'education'
+                },
+                {
+                    id: 'res-6',
+                    title: 'Cerebral Venous Thrombosis (CVT) Awareness in Obstetrics',
+                    category: 'Research',
+                    summary: 'Synthesizing documented findings on headaches during pregnancy and early diagnosis protocols for CVT.',
+                    type: 'Clinical Overview',
+                    readTime: '7 min read',
+                    slug: 'research'
+                }
+            ];
+
+            const filteredResources = useMemo(() => {
+                return educationalResources.filter(res => {
+                    const matchesCategory = selectedCategory === 'All' || res.category === selectedCategory;
+                    const matchesSearch = res.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                          res.summary.toLowerCase().includes(searchQuery.toLowerCase());
+                    return matchesCategory && matchesSearch;
+                });
+            }, [selectedCategory, searchQuery]);
+
+            return (
+                <div className={`flex flex-col min-h-screen ${highContrast ? 'bg-black text-white' : 'bg-slate-50 text-slate-800'}`}>
+                    
+                    <div id="analytics-toast" className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-2xl text-xs font-mono transition-all duration-300 transform translate-y-full opacity-0 flex items-center gap-2 border border-brand-500">
+                        <Icon name="check-circle" className="w-4 h-4 text-emerald-400" />
+                        <span>Conversion Event Recorded</span>
+                    </div>
+
+                    <div className="bg-slate-900 text-slate-100 text-xs font-medium py-2 px-4 border-b border-slate-800 flex justify-between items-center">
+                        <div className="max-w-7xl mx-auto w-full flex flex-wrap justify-between items-center gap-2">
+                            <div className="flex items-center gap-2">
+                                <span className="bg-brand-600 text-white uppercase text-[10px] font-bold px-1.5 py-0.5 rounded">Medical Disclaimer</span>
+                                <span className="hidden sm:inline">Educational platform only. If experiencing medical emergencies:</span>
+                                <span className="font-semibold text-brand-300">Call 911 or seek immediate emergency healthcare.</span>
+                            </div>
+                            <div className="flex items-center gap-4 text-xs">
+                                <button 
+                                    onClick={() => setHighContrast(!highContrast)} 
+                                    className="hover:underline flex items-center gap-1 text-slate-300 hover:text-white"
+                                    aria-label="Toggle High Contrast Mode">
+                                    <Icon name="eye" className="w-3.5 h-3.5" />
+                                    <span>{highContrast ? 'Normal View' : 'High Contrast'}</span>
+                                </button>
+                                <span className="text-slate-600">|</span>
+                                <a href="tel:911" className="text-brand-300 font-bold hover:underline">Emergency: 911</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex items-center justify-between h-20">
+                                
+                                <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigateTo('home')}>
+                                    <img 
+                                        src="https://raw.githubusercontent.com/CreativeTugsDotCom/fff/refs/heads/main/qt%3Dq_95.webp" 
+                                        alt="The Shane Foundation Logo" 
+                                        className="h-12 w-auto object-contain rounded-md"
+                                    />
+                                    <div>
+                                        <div className="font-serif font-bold text-xl sm:text-2xl tracking-tight text-slate-900 leading-none">
+                                            THE SHANE FOUNDATION
+                                        </div>
+                                        <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5">
+                                            Maternal & Contraceptive Health Awareness
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <nav className="hidden lg:flex items-center space-x-6 text-sm font-medium text-slate-700">
+                                    <button 
+                                        onClick={() => navigateTo('home')} 
+                                        className={`hover:text-brand-600 transition-colors ${currentPath === 'home' ? 'text-brand-600 font-bold' : ''}`}>
+                                        Home
+                                    </button>
+
+                                    <div className="relative group py-2">
+                                        <button 
+                                            onClick={() => navigateTo('education')}
+                                            className={`hover:text-brand-600 transition-colors flex items-center gap-1 ${['education', 'pregnancy-blood-clots', 'birth-control-blood-clot-risks', 'fetal-health-clot-risks', 'warning-signs'].includes(currentPath) ? 'text-brand-600 font-bold' : ''}`}>
+                                            <span>Learn</span>
+                                            <Icon name="chevron-down" className="w-4 h-4 text-slate-400 group-hover:text-brand-600" />
+                                        </button>
+                                        <div className="absolute top-full left-0 w-64 bg-white rounded-xl shadow-xl border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                            <button onClick={() => navigateTo('pregnancy-blood-clots')} className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-slate-700 hover:text-brand-600 text-xs font-medium border-l-2 border-transparent hover:border-brand-600">
+                                                Pregnancy & Postpartum Risks
+                                            </button>
+                                            <button onClick={() => navigateTo('birth-control-blood-clot-risks')} className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-slate-700 hover:text-brand-600 text-xs font-medium border-l-2 border-transparent hover:border-brand-600">
+                                                Birth Control & Blood Clot Risks
+                                            </button>
+                                            <button onClick={() => navigateTo('fetal-health-clot-risks')} className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-slate-700 hover:text-brand-600 text-xs font-medium border-l-2 border-transparent hover:border-brand-600">
+                                                Fetal Health & Placental Clots
+                                            </button>
+                                            <button onClick={() => navigateTo('warning-signs')} className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-brand-600 font-semibold text-xs border-l-2 border-brand-600 bg-brand-50/50">
+                                                Know The Warning Signs
+                                            </button>
+                                            <button onClick={() => navigateTo('education')} className="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-slate-700 hover:text-brand-600 text-xs font-medium border-l-2 border-transparent hover:border-brand-600 border-t border-slate-100 mt-1">
+                                                Maternal Education Hub
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        onClick={() => navigateTo('research')} 
+                                        className={`hover:text-brand-600 transition-colors ${currentPath === 'research' ? 'text-brand-600 font-bold' : ''}`}>
+                                        Research & Impact
+                                    </button>
+
+                                    <button 
+                                        onClick={() => navigateTo('shanes-story')} 
+                                        className={`hover:text-brand-600 transition-colors ${currentPath === 'shanes-story' ? 'text-brand-600 font-bold' : ''}`}>
+                                        Shane's Story
+                                    </button>
+
+                                    <button 
+                                        onClick={() => navigateTo('about')} 
+                                        className={`hover:text-brand-600 transition-colors ${currentPath === 'about' ? 'text-brand-600 font-bold' : ''}`}>
+                                        About Us
+                                    </button>
+
+                                    <button 
+                                        onClick={() => navigateTo('contact')} 
+                                        className={`hover:text-brand-600 transition-colors ${currentPath === 'contact' ? 'text-brand-600 font-bold' : ''}`}>
+                                        Contact & Share Story
+                                    </button>
+                                </nav>
+
+                                <div className="hidden sm:flex items-center gap-3">
+                                    <button 
+                                        onClick={() => navigateTo('warning-signs')}
+                                        className="text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 px-3.5 py-2 rounded-lg transition-colors border border-brand-200">
+                                        Warning Signs
+                                    </button>
+                                    <button 
+                                        onClick={() => { setDonateModalOpen(true); trackConversion('donate_header_click'); }}
+                                        className="text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all focus-visible-ring flex items-center gap-1.5">
+                                        <Icon name="heart" className="w-3.5 h-3.5 fill-current" />
+                                        <span>DONATE</span>
+                                    </button>
+                                </div>
+
+                                <div className="flex lg:hidden items-center gap-2">
+                                    <button 
+                                        onClick={() => { setDonateModalOpen(true); trackConversion('donate_mobile_header_click'); }}
+                                        className="text-xs font-bold text-white bg-brand-600 px-3 py-1.5 rounded-md">
+                                        Donate
+                                    </button>
+                                    <button 
+                                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                        className="p-2 text-slate-700 hover:text-slate-900 focus:outline-none"
+                                        aria-label="Toggle Menu">
+                                        <Icon name={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6" />
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {mobileMenuOpen && (
+                            <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-2xl">
+                                <button onClick={() => navigateTo('home')} className="block w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                    Home
+                                </button>
+                                <div>
+                                    <button 
+                                        onClick={() => setMobileLearnOpen(!mobileLearnOpen)} 
+                                        className="flex justify-between items-center w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                        <span>Learn & Education</span>
+                                        <Icon name={mobileLearnOpen ? "chevron-up" : "chevron-down"} className="w-4 h-4" />
+                                    </button>
+                                    {mobileLearnOpen && (
+                                        <div className="pl-4 py-2 space-y-2 bg-slate-50 rounded-lg my-1">
+                                            <button onClick={() => navigateTo('pregnancy-blood-clots')} className="block text-xs font-medium text-slate-700 py-1">
+                                                Pregnancy & Postpartum Risks
+                                            </button>
+                                            <button onClick={() => navigateTo('birth-control-blood-clot-risks')} className="block text-xs font-medium text-slate-700 py-1">
+                                                Birth Control & Blood Clot Risks
+                                            </button>
+                                            <button onClick={() => navigateTo('fetal-health-clot-risks')} className="block text-xs font-medium text-slate-700 py-1">
+                                                Fetal Health & Placental Clots
+                                            </button>
+                                            <button onClick={() => navigateTo('warning-signs')} className="block text-xs font-bold text-brand-600 py-1">
+                                                Know The Warning Signs
+                                            </button>
+                                            <button onClick={() => navigateTo('education')} className="block text-xs font-medium text-slate-700 py-1">
+                                                Full Educational Hub
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                <button onClick={() => navigateTo('research')} className="block w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                    Research & Impact
+                                </button>
+                                <button onClick={() => navigateTo('shanes-story')} className="block w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                    Shane's Story
+                                </button>
+                                <button onClick={() => navigateTo('about')} className="block w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                    About Us & Leadership
+                                </button>
+                                <button onClick={() => navigateTo('contact')} className="block w-full text-left py-2 font-semibold text-slate-800 border-b border-slate-100">
+                                    Contact & Share Story
+                                </button>
+                                <div className="pt-2">
+                                    <button 
+                                        onClick={() => { setDonateModalOpen(true); setMobileMenuOpen(false); }}
+                                        className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg text-center shadow-md">
+                                        Support Our Mission - Donate
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </header>
+
+                    <main className="flex-grow">
+                        
+                        {/* HOME PAGE VIEW */}
+                        {currentPath === 'home' && (
+                            <div>
+                                <section className="relative bg-gradient-to-b from-slate-900 via-navy-850 to-navy-900 text-white py-16 md:py-24 overflow-hidden">
+                                    {/* Ambient glow effects replacing hero image */}
+                                    <div className="absolute -top-40 -right-40 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-brand-800/20 rounded-full blur-3xl pointer-events-none"></div>
+                                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#e7788f_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                                        <div className="grid lg:grid-cols-12 gap-12 items-center">
+                                            
+                                            <div className="lg:col-span-7 space-y-6">
+                                                <div className="inline-flex items-center gap-2 bg-brand-950/80 border border-brand-500/30 px-3.5 py-1.5 rounded-full text-brand-200 text-xs font-semibold">
+                                                    <Icon name="shield-alert" className="w-4 h-4 text-brand-400" />
+                                                    <span>Maternal & Contraceptive Blood Clot Awareness</span>
+                                                </div>
+                                                <h1 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white leading-tight">
+                                                    KNOW THE WARNING SIGNS. <br className="hidden sm:inline" />
+                                                    <span className="text-brand-300">PROTECT MATERNAL & FETAL HEALTH.</span>
+                                                </h1>
+                                                <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                                                    The Shane Foundation is a 501(c)(3) nonprofit dedicated to raising life-saving awareness and supporting research for the prevention and treatment of contraceptive- and pregnancy-related blood clotting disorders.
+                                                </p>
+                                                <div className="flex flex-wrap items-center gap-4 pt-2">
+                                                    <button 
+                                                        onClick={() => navigateTo('warning-signs')}
+                                                        className="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3.5 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm sm:text-base">
+                                                        <span>LEARN THE WARNING SIGNS</span>
+                                                        <Icon name="arrow-right" className="w-4 h-4" />
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => setDonateModalOpen(true)}
+                                                        className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3.5 rounded-xl font-bold transition-all text-sm sm:text-base">
+                                                        SUPPORT OUR MISSION
+                                                    </button>
+                                                </div>
+                                                
+                                                <div className="pt-6 border-t border-slate-800 grid grid-cols-3 gap-4 text-slate-400 text-xs">
+                                                    <div>
+                                                        <div className="text-white font-bold text-sm sm:text-base">501(c)(3)</div>
+                                                        <div>Tax-Deductible Nonprofit</div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-white font-bold text-sm sm:text-base">3 Core Areas</div>
+                                                        <div>Pregnancy, Birth Control & Fetal</div>
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-white font-bold text-sm sm:text-base">Research Driven</div>
+                                                        <div>Awareness & Education</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="lg:col-span-5">
+                                                <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 sm:p-8 backdrop-blur-sm shadow-2xl relative">
+                                                    <div className="absolute -top-3 -right-3 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow">
+                                                        Essential Knowledge
+                                                    </div>
+                                                    <div className="flex items-center gap-3 mb-4">
+                                                        <div className="p-3 bg-brand-900/50 text-brand-300 rounded-xl border border-brand-800">
+                                                            <Icon name="heart-pulse" className="w-6 h-6" />
+                                                        </div>
+                                                        <div>
+                                                            <h3 className="font-serif font-bold text-lg text-white">Who Is At Risk?</h3>
+                                                            <p className="text-xs text-slate-400">Three critical blood clotting categories</p>
+                                                        </div>
+                                                    </div>
+                                                    <ul className="space-y-3 text-sm text-slate-300 mb-6">
+                                                        <li className="flex items-start gap-2.5">
+                                                            <Icon name="check-circle-2" className="w-5 h-5 text-brand-400 shrink-0 mt-0.5" />
+                                                            <span><strong>Pregnancy & Postpartum:</strong> Blood clot risk increases up to 5x during pregnancy and peaks postpartum.</span>
+                                                        </li>
+                                                        <li className="flex items-start gap-2.5">
+                                                            <Icon name="check-circle-2" className="w-5 h-5 text-brand-400 shrink-0 mt-0.5" />
+                                                            <span><strong>Hormone-Based Contraception:</strong> Estrogen in oral contraceptives, patches, and rings affects coagulation pathways.</span>
+                                                        </li>
+                                                        <li className="flex items-start gap-2.5">
+                                                            <Icon name="check-circle-2" className="w-5 h-5 text-brand-400 shrink-0 mt-0.5" />
+                                                            <span><strong>Fetal Health & Placental Clots:</strong> Clotting disorders can impair placental blood flow, impacting growth and pregnancy outcomes.</span>
+                                                        </li>
+                                                    </ul>
+                                                    <button 
+                                                        onClick={() => navigateTo('education')}
+                                                        className="w-full bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold py-3 rounded-lg text-center transition-colors flex items-center justify-center gap-1">
+                                                        <span>EXPLORE EDUCATIONAL HUB</span>
+                                                        <Icon name="chevron-right" className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="py-16 bg-slate-100">
+                                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                        <div className="text-center max-w-3xl mx-auto mb-12">
+                                            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
+                                                Three Blood Clotting Issues Specific to Women
+                                            </h2>
+                                            <p className="text-slate-600 mt-2 text-sm sm:text-base">
+                                                Empowering families and healthcare consumers with critical information on maternal, fetal, and contraceptive clotting factors.
+                                            </p>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-3 gap-8">
+                                            {}
+                                            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden">
+                                                <div>
+                                                    <div className="relative overflow-hidden rounded-xl mb-6 shadow-sm border border-slate-200 group">
+                                                        <img 
+                                                            src="https://raw.githubusercontent.com/CreativeTugsDotCom/LK/refs/heads/main/Screenshot%202026-10-02%20221615.png" 
+                                                            alt="Pregnancy & Postpartum Blood Clots" 
+                                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                    </div>
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 shrink-0">
+                                                            <Icon name="baby" className="w-5 h-5" />
+                                                        </div>
+                                                        <h3 className="text-xl font-serif font-bold text-slate-900">
+                                                            Pregnancy & Postpartum
+                                                        </h3>
+                                                    </div>
+                                                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                                        Blood clotting risk increases during pregnancy as a natural defense against hemorrhage during birth, but can lead to Deep Vein Thrombosis (DVT) or Pulmonary Embolism (PE).
+                                                    </p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => navigateTo('pregnancy-blood-clots')}
+                                                    className="inline-flex items-center gap-2 text-brand-600 font-bold text-sm hover:text-brand-700 group mt-auto">
+                                                    <span>EXPLORE PREGNANCY & POSTPARTUM</span>
+                                                    <Icon name="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                </button>
+                                            </div>
+
+                                            {}
+                                            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden">
+                                                <div>
+                                                    <div className="relative overflow-hidden rounded-xl mb-6 shadow-sm border border-slate-200 group">
+                                                        <img 
+                                                            src="https://raw.githubusercontent.com/CreativeTugsDotCom/LK/refs/heads/main/Screenshot%202026-10-02%20221641.png" 
+                                                            alt="Birth Control Blood Clot Risks" 
+                                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                    </div>
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 shrink-0">
+                                                            <Icon name="pill" className="w-5 h-5" />
+                                                        </div>
+                                                        <h3 className="text-xl font-serif font-bold text-slate-900">
+                                                            Birth Control Risks
+                                                        </h3>
+                                                    </div>
+                                                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                                        Hormone-based contraceptives containing synthetic estrogen increase the risk of blood clots. Understanding personal and family genetic factors is crucial before prescribing.
+                                                    </p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => navigateTo('birth-control-blood-clot-risks')}
+                                                    className="inline-flex items-center gap-2 text-brand-600 font-bold text-sm hover:text-brand-700 group mt-auto">
+                                                    <span>LEARN ABOUT BIRTH CONTROL RISKS</span>
+                                                    <Icon name="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                </button>
+                                            </div>
+
+                                            {}
+                                            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden">
+                                                <div>
+                                                    <div className="relative overflow-hidden rounded-xl mb-6 shadow-sm border border-slate-200 group">
+                                                        <img 
+                                                            src="https://raw.githubusercontent.com/CreativeTugsDotCom/LK/refs/heads/main/Screenshot%202026-10-02%20221740.png" 
+                                                            alt="Fetal Health & Placental Clots" 
+                                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        />
+                                                    </div>
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <div className="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 shrink-0">
+                                                            <Icon name="heart" className="w-5 h-5" />
+                                                        </div>
+                                                        <h3 className="text-xl font-serif font-bold text-slate-900">
+                                                            Fetal Health & Placental Clots
+                                                        </h3>
+                                                    </div>
+                                                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                                                        Maternal blood clotting conditions can cause microscopic blood clots in the placenta, potentially contributing to fetal growth restriction, miscarriages, or stillbirths.
+                                                    </p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => navigateTo('fetal-health-clot-risks')}
+                                                    className="inline-flex items-center gap-2 text-brand-600 font-bold text-sm hover:text-brand-700 group mt-auto">
+                                                    <span>EXPLORE FETAL HEALTH</span>
+                                                    <Icon name="arrow-right" className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="py-16 bg-white border-t border-slate-200">
+                                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                                            <div>
+                                                <div className="text-brand-600 font-bold text-xs uppercase tracking-wider mb-1">Critical Recognition</div>
+                                                <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
+                                                    KNOW THE WARNING SIGNS
+                                                </h2>
+                                                <p className="text-slate-600 text-sm mt-1 max-w-xl">
+                                                    Blood clots can present subtly or abruptly. Recognizing these symptoms early can save lives.
+                                                </p>
+                                            </div>
+                                            <button 
+                                                onClick={() => navigateTo('warning-signs')}
+                                                className="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-5 py-3 rounded-lg transition-colors self-start md:self-auto flex items-center gap-1.5">
+                                                <span>VIEW ALL WARNING SIGNS & CHECKLIST</span>
+                                                <Icon name="arrow-right" className="w-4 h-4" />
+                                            </button>
+                                        </div>
+
+                                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                            {warningSignsList.slice(0, 4).map((sign, idx) => {
+                                                const bgImages = [
+                                                    "https://raw.githubusercontent.com/CreativeTugsDotCom/OKK/refs/heads/main/Screenshot%202026-10-02%20222221.png",
+                                                    "https://raw.githubusercontent.com/CreativeTugsDotCom/OKK/refs/heads/main/Screenshot%202026-10-02%20222301.png",
+                                                    "https://raw.githubusercontent.com/CreativeTugsDotCom/OKK/refs/heads/main/Screenshot%202026-10-02%20222340.png",
+                                                    "https://raw.githubusercontent.com/CreativeTugsDotCom/OKK/refs/heads/main/Screenshot%202026-10-02%20222425.png"
+                                                ];
+                                                return (
+                                                    <div key={idx} className="relative rounded-2xl p-6 border border-slate-700/40 shadow-md hover:shadow-2xl transition-all overflow-hidden group flex flex-col justify-between min-h-[300px]">
+                                                        {/* Full Background Image */}
+                                                        <img 
+                                                            src={bgImages[idx]} 
+                                                            alt={sign.title} 
+                                                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+                                                        />
+                                                        {/* Gradient Overlay for Legibility & Contrast */}
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-900/50 group-hover:via-slate-950/85 transition-colors duration-300"></div>
+
+                                                        {/* Card Foreground Content */}
+                                                        <div className="relative z-10 flex flex-col justify-between h-full space-y-4">
+                                                            <div>
+                                                                <div className="flex items-center justify-between mb-4">
+                                                                    <div className="w-10 h-10 rounded-xl bg-brand-600/90 backdrop-blur-sm text-white flex items-center justify-center font-bold shadow-md border border-brand-400/30">
+                                                                        <Icon name={sign.icon} className="w-5 h-5" />
+                                                                    </div>
+                                                                    <span className="text-[10px] font-semibold text-brand-200 uppercase tracking-wider bg-slate-900/85 backdrop-blur-md px-2.5 py-1 rounded-md border border-slate-700/60 shadow">
+                                                                        {sign.category}
+                                                                    </span>
+                                                                </div>
+                                                                <h3 className="font-serif font-bold text-white text-lg mb-2 group-hover:text-brand-300 transition-colors">
+                                                                    {sign.title}
+                                                                </h3>
+                                                                <p className="text-slate-200 text-xs leading-relaxed font-normal">
+                                                                    {sign.description}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        )}
+
+                        {/* EDUCATIONAL HUB VIEW */}
+                        {currentPath === 'education' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                    <div className="mb-8">
+                                        <div className="text-xs font-bold text-brand-600 uppercase tracking-wider">Central Resource Library</div>
+                                        <h1 className="text-3xl font-serif font-bold text-slate-900 mt-1">Maternal Health Education</h1>
+                                        <p className="text-slate-600 text-sm mt-1 max-w-2xl">
+                                            Explore evidence-based educational materials, patient discussion guides, and research insights regarding blood clot risks during pregnancy, postpartum, and contraceptive use.
+                                        </p>
+                                    </div>
+
+                                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-8 space-y-4">
+                                        <div className="relative">
+                                            <Icon name="search" className="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5" />
+                                            <input 
+                                                type="text"
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                placeholder="Search educational topics (e.g. postpartum symptoms, contraceptives, DVT, placental clotting)..."
+                                                className="w-full pl-11 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 pt-2">
+                                            {['All', 'Pregnancy & Postpartum', 'Birth Control', 'Fetal Health', 'Warning Signs', 'Research', 'Patient Advocacy'].map(cat => (
+                                                <button 
+                                                    key={cat}
+                                                    onClick={() => setSelectedCategory(cat)}
+                                                    className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedCategory === cat ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}>
+                                                    {cat}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {filteredResources.map(res => (
+                                            <div key={res.id} className="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                                                <div>
+                                                    <div className="flex justify-between items-center text-xs text-slate-500 mb-3">
+                                                        <span className="bg-brand-50 text-brand-700 px-2.5 py-0.5 rounded font-medium border border-brand-200">{res.category}</span>
+                                                        <span>{res.readTime}</span>
+                                                    </div>
+                                                    <h3 className="font-serif font-bold text-lg text-slate-900 mb-2">{res.title}</h3>
+                                                    <p className="text-slate-600 text-xs leading-relaxed mb-4">{res.summary}</p>
+                                                </div>
+                                                <button 
+                                                    onClick={() => navigateTo(res.slug)}
+                                                    className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 hover:text-brand-700 pt-2 border-t border-slate-100">
+                                                    <span>READ FULL ARTICLE</span>
+                                                    <Icon name="arrow-right" className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* WARNING SIGNS VIEW */}
+                        {currentPath === 'warning-signs' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                    <div className="bg-brand-900 text-white p-8 rounded-3xl mb-12 relative overflow-hidden">
+                                        <div className="max-w-2xl space-y-3 relative z-10">
+                                            <span className="bg-brand-700 text-brand-100 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Patient Safety Guide</span>
+                                            <h1 className="text-3xl sm:text-4xl font-serif font-bold">WARNING SIGNS OF BLOOD CLOTS</h1>
+                                            <p className="text-slate-200 text-sm leading-relaxed">
+                                                Blood clotting conditions during pregnancy, postpartum, or during hormone-based contraceptive use require prompt clinical evaluation. Know what to look for.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-6 mb-12">
+                                        {warningSignsList.map((sign, idx) => (
+                                            <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4">
+                                                <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center shrink-0">
+                                                    <Icon name={sign.icon} className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-serif font-bold text-slate-900 text-lg">{sign.title}</h3>
+                                                        {sign.urgent && (
+                                                            <span className="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded">URGENT</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-[11px] font-semibold text-brand-600 uppercase tracking-wider mb-2">{sign.category}</div>
+                                                    <p className="text-slate-600 text-xs leading-relaxed">{sign.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-8 mb-12 text-red-950">
+                                        <div className="flex items-start gap-4">
+                                            <Icon name="alert-octagon" className="w-8 h-8 text-red-600 shrink-0 mt-1" />
+                                            <div className="space-y-3">
+                                                <h3 className="font-serif font-bold text-xl text-red-900">What To Do If You Experience Symptoms</h3>
+                                                <p className="text-xs sm:text-sm text-red-800 leading-relaxed">
+                                                    If you develop shortness of breath, chest pain, leg swelling/pain, or severe unrelenting headaches while pregnant, postpartum, or taking birth control:
+                                                </p>
+                                                <ul className="list-disc pl-5 text-xs sm:text-sm space-y-1 text-red-900 font-medium">
+                                                    <li>Contact your healthcare provider or OB/GYN immediately.</li>
+                                                    <li>Go to the nearest emergency department if symptoms are severe or sudden.</li>
+                                                    <li>Inform medical staff specifically if you are pregnant, recently gave birth, or taking hormonal contraceptives.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PREGNANCY & POSTPARTUM TOPIC VIEW */}
+                        {currentPath === 'pregnancy-blood-clots' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                                    
+                                    {/* Hero Header */}
+                                    <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
+                                        <div className="absolute -top-24 -right-24 w-80 h-80 bg-brand-600/30 rounded-full blur-3xl pointer-events-none"></div>
+                                        <div className="relative z-10 max-w-3xl space-y-4">
+                                            <div className="inline-flex items-center gap-2 bg-brand-950/80 border border-brand-500/40 px-3 py-1 rounded-full text-brand-300 text-xs font-semibold">
+                                                <Icon name="baby" className="w-4 h-4 text-brand-400" />
+                                                <span>Maternal Health Focus</span>
+                                            </div>
+                                            <h1 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white leading-tight">
+                                                Pregnancy & Postpartum Blood Clot Risks
+                                            </h1>
+                                            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                                                Pregnant women and new mothers face a 4 to 6 times higher risk of blood clots than non-pregnant women. Over 50% of pregnancy-related maternal blood clotting fatalities occur <span className="text-brand-300 font-semibold underline decoration-brand-500">after giving birth</span>.
+                                            </p>
+                                        </div>
+
+                                        {/* Quick Stat Cards Banner */}
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-8 border-t border-slate-800">
+                                            <div className="bg-slate-800/80 border border-slate-700/80 p-4 rounded-xl">
+                                                <div className="text-2xl sm:text-3xl font-extrabold text-brand-400">4x to 6x</div>
+                                                <div className="text-xs text-slate-300 mt-1">Higher Clot Risk During Gestation</div>
+                                            </div>
+                                            <div className="bg-slate-800/80 border border-slate-700/80 p-4 rounded-xl">
+                                                <div className="text-2xl sm:text-3xl font-extrabold text-brand-400">50%+</div>
+                                                <div className="text-xs text-slate-300 mt-1">Of Clot Deaths Occur Postpartum</div>
+                                            </div>
+                                            <div className="bg-slate-800/80 border border-slate-700/80 p-4 rounded-xl">
+                                                <div className="text-2xl sm:text-3xl font-extrabold text-brand-400">2x Risk</div>
+                                                <div className="text-xs text-slate-300 mt-1">Increase Following C-Section Delivery</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Main Content Layout */}
+                                    <div className="grid lg:grid-cols-12 gap-8">
+                                        <div className="lg:col-span-8 space-y-8">
+                                            
+                                            {/* Hypercoagulability Breakdown */}
+                                            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                                                <h2 className="text-2xl font-serif font-bold text-slate-900 flex items-center gap-2">
+                                                    <Icon name="heart-pulse" className="w-6 h-6 text-brand-600" />
+                                                    Why Does Pregnancy Increase Blood Clotting?
+                                                </h2>
+                                                <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
+                                                    During pregnancy, a woman's body naturally undergoes <strong>hypercoagulability</strong>—increasing blood-clotting proteins while decreasing anti-coagulants. This evolutionary response protects against severe hemorrhage during labor and delivery. However, this natural protection also makes pregnant women significantly more vulnerable to <strong>Deep Vein Thrombosis (DVT)</strong> and <strong>Pulmonary Embolism (PE)</strong>.
+                                                </p>
+                                                
+                                                <div className="bg-brand-50/60 border border-brand-200 rounded-xl p-5 space-y-3 mt-4">
+                                                    <h3 className="font-serif font-bold text-brand-900 text-base">Key Critical Timeframes:</h3>
+                                                    <div className="grid sm:grid-cols-3 gap-4 text-xs">
+                                                        <div className="bg-white p-3.5 rounded-lg border border-brand-100 shadow-xs">
+                                                            <div className="font-bold text-brand-700 mb-1">1st Trimester</div>
+                                                            <div className="text-slate-600">Hormonal changes begin altering liver factor production immediately upon conception.</div>
+                                                        </div>
+                                                        <div className="bg-white p-3.5 rounded-lg border border-brand-100 shadow-xs">
+                                                            <div className="font-bold text-brand-700 mb-1">3rd Trimester</div>
+                                                            <div className="text-slate-600">The expanding uterus presses on pelvic veins, slowing lower-limb circulation.</div>
+                                                        </div>
+                                                        <div className="bg-white p-3.5 rounded-lg border border-brand-100 shadow-xs">
+                                                            <div className="font-bold text-brand-700 mb-1">Postpartum (0-12 Wks)</div>
+                                                            <div className="text-slate-600">Highest risk period! Vascular trauma and reduced post-birth mobility increase clot potential.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Maternal Mortality Disparity Section */}
+                                            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                                                <h2 className="text-2xl font-serif font-bold text-slate-900">
+                                                    Maternal Health Disparities & Mortality Statistics
+                                                </h2>
+                                                <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
+                                                    Blood clots (specifically Pulmonary Embolism) remain a leading preventable cause of maternal death in developed nations. According to public health data, maternal mortality rates show severe disparities:
+                                                </p>
+
+                                                <div className="grid sm:grid-cols-2 gap-4 my-4">
+                                                    <div className="p-5 bg-slate-900 text-white rounded-xl space-y-1">
+                                                        <div className="text-xs text-brand-300 font-bold uppercase tracking-wider">US National Average</div>
+                                                        <div className="text-2xl font-bold">32.9 Deaths</div>
+                                                        <div className="text-xs text-slate-300">per 100,000 live births</div>
+                                                    </div>
+                                                    <div className="p-5 bg-brand-950 text-white rounded-xl space-y-1 border border-brand-800">
+                                                        <div className="text-xs text-brand-300 font-bold uppercase tracking-wider">Black Maternal Mortality Rate</div>
+                                                        <div className="text-2xl font-bold text-brand-300">69.9 Deaths</div>
+                                                        <div className="text-xs text-slate-300">per 100,000 live births (over 2x national avg)</div>
+                                                    </div>
+                                                </div>
+                                                <p className="text-slate-600 text-xs italic">
+                                                    Raising awareness, recognizing early symptoms without dismissal, and ensuring proactive risk screenings during prenatal care are essential to reducing these preventable tragedies.
+                                                </p>
+                                            </div>
+
+                                            {/* Clinical Risk Factors Grid */}
+                                            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                                                <h2 className="text-2xl font-serif font-bold text-slate-900">
+                                                    Pregnancy Clot Risk Factors Checklist
+                                                </h2>
+                                                <p className="text-slate-600 text-sm">
+                                                    Check if any of these elevation factors apply to you. Discuss them promptly with your OB/GYN or Maternal-Fetal Medicine specialist:
+                                                </p>
+                                                <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                                                    {[
+                                                        "Personal or family history of blood clots or DVT/PE",
+                                                        "Known inherited or acquired Thrombophilia (e.g., Factor V Leiden, APS)",
+                                                        "Delivery via C-Section (cesarean delivery)",
+                                                        "Prolonged bed rest or immobility during pregnancy",
+                                                        "Preeclampsia, high blood pressure, or lupus",
+                                                        "Carrying multiples (twins, triplets)",
+                                                        "Age 35 or older at delivery",
+                                                        "Previous blood clot while using hormone birth control"
+                                                    ].map((item, idx) => (
+                                                        <div key={idx} className="flex items-start gap-2.5 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                                                            <Icon name="check-circle-2" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                            <span className="text-slate-800 font-medium">{item}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        {/* Sidebar Navigation & Emergency Callouts */}
+                                        <div className="lg:col-span-4 space-y-6">
+                                            
+                                            <div className="bg-red-600 text-white p-6 rounded-2xl shadow-lg space-y-4">
+                                                <div className="flex items-center gap-2 text-red-100 text-xs font-bold uppercase tracking-wider">
+                                                    <Icon name="alert-octagon" className="w-5 h-5 text-white" />
+                                                    <span>Urgent Warning</span>
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-white">
+                                                    Postpartum Emergency Symptoms
+                                                </h3>
+                                                <p className="text-xs text-red-100 leading-relaxed">
+                                                    If you experience leg swelling, calf warmth/pain, sudden shortness of breath, chest pressure, or severe persistent headaches post-delivery:
+                                                </p>
+                                                <a 
+                                                    href="tel:911" 
+                                                    className="block w-full bg-white text-red-700 font-extrabold text-center py-3 rounded-xl text-xs hover:bg-red-50 transition-colors shadow">
+                                                    CALL 911 OR GO TO ER IMMEDIATELY
+                                                </a>
+                                            </div>
+
+                                            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                                                <h3 className="font-serif font-bold text-lg text-slate-900">Questions to Ask Your OB/GYN</h3>
+                                                <ul className="space-y-2.5 text-xs text-slate-700">
+                                                    <li className="flex items-start gap-2">
+                                                        <Icon name="chevron-right" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                        <span>"Does my family history warrant a thrombophilia screening panel?"</span>
+                                                    </li>
+                                                    <li className="flex items-start gap-2">
+                                                        <Icon name="chevron-right" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                        <span>"Should I wear medical compression stockings or take LMWH (heparin) postpartum?"</span>
+                                                    </li>
+                                                    <li className="flex items-start gap-2">
+                                                        <Icon name="chevron-right" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                        <span>"What is our care plan if I require an emergency C-section?"</span>
+                                                    </li>
+                                                </ul>
+                                                <button 
+                                                    onClick={() => navigateTo('warning-signs')}
+                                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-3 rounded-xl transition-colors">
+                                                    DOWNLOAD FULL CHECKLIST
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )}
+
+                        {/* BIRTH CONTROL RISKS TOPIC VIEW */}
+                        {currentPath === 'birth-control-blood-clot-risks' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                                    
+                                    {/* Hero Banner */}
+                                    <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
+                                        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-brand-600/30 rounded-full blur-3xl pointer-events-none"></div>
+                                        <div className="relative z-10 max-w-3xl space-y-4">
+                                            <div className="inline-flex items-center gap-2 bg-brand-950/80 border border-brand-500/40 px-3 py-1 rounded-full text-brand-300 text-xs font-semibold">
+                                                <Icon name="pill" className="w-4 h-4 text-brand-400" />
+                                                <span>Contraceptive Safety & Awareness</span>
+                                            </div>
+                                            <h1 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white leading-tight">
+                                                Birth Control & Blood Clot Risks
+                                            </h1>
+                                            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                                                Most hormonal contraceptives increase blood clot risks by mimicking pregnancy-level hormonal shifts. Synthetic estrogen elevates clotting factors in the liver, particularly when combined with genetic risk factors or lifestyle habits.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Visual Drug Category Risk Matrix */}
+                                    <div className="space-y-6">
+                                        <div className="text-center max-w-2xl mx-auto">
+                                            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900">
+                                                Contraceptive Drug Risk Levels
+                                            </h2>
+                                            <p className="text-slate-600 text-sm mt-1">
+                                                Different delivery methods and hormone formulations carry vastly different blood clot probabilities.
+                                            </p>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            
+                                            {/* Progesterone Only */}
+                                            <div className="bg-white rounded-2xl p-6 border border-emerald-200 shadow-sm space-y-3 relative overflow-hidden">
+                                                <div className="bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                                                    Lowest Risk Level
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-slate-900">Progestin-Only Options</h3>
+                                                <p className="text-xs text-slate-600 leading-relaxed">
+                                                    Mini-pills, progestin-only IUDs (Mirena, Kyleena), and implants generally produce lower or minimal blood clot risks compared to combination formulations because they omit synthetic estrogen.
+                                                </p>
+                                                <div className="text-xs font-semibold text-emerald-700 pt-2 border-t border-slate-100 flex items-center gap-1">
+                                                    <Icon name="check" className="w-4 h-4" />
+                                                    <span>Often preferred for high-risk patients</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Combination Pills */}
+                                            <div className="bg-white rounded-2xl p-6 border border-amber-200 shadow-sm space-y-3 relative overflow-hidden">
+                                                <div className="bg-amber-100 text-amber-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                                                    Moderate Risk (Up to 6x)
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-slate-900">Combo Oral Pills</h3>
+                                                <p className="text-xs text-slate-600 leading-relaxed">
+                                                    Pills combining ethinyl estradiol and progestin raise the risk of blood clots up to <strong>6 times higher</strong> than non-users. Prior screening for inherited clotting traits is essential.
+                                                </p>
+                                                <div className="text-xs font-semibold text-amber-700 pt-2 border-t border-slate-100 flex items-center gap-1">
+                                                    <Icon name="alert-circle" className="w-4 h-4" />
+                                                    <span>Requires personal/family medical review</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Drospirenone Containing */}
+                                            <div className="bg-white rounded-2xl p-6 border border-brand-200 shadow-sm space-y-3 relative overflow-hidden">
+                                                <div className="bg-brand-100 text-brand-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                                                    Elevated Warning
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-slate-900">Drospirenone Formulations</h3>
+                                                <p className="text-xs text-slate-600 leading-relaxed">
+                                                    Drugs like <strong>YAZ, Yasmin, Beyaz, Slynd, and Ocella</strong> contain drospirenone and carry FDA black-box warnings for higher rates of DVT, PE, stroke, and heart attacks.
+                                                </p>
+                                                <div className="text-xs font-semibold text-brand-700 pt-2 border-t border-slate-100 flex items-center gap-1">
+                                                    <Icon name="shield-alert" className="w-4 h-4" />
+                                                    <span>Monitored for venous thromboembolism</span>
+                                                </div>
+                                            </div>
+
+                                            {/* NuvaRing */}
+                                            <div className="bg-white rounded-2xl p-6 border border-brand-300 shadow-sm space-y-3 relative overflow-hidden">
+                                                <div className="bg-brand-100 text-brand-900 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                                                    Up to 6.5x Increased Risk
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-slate-900">Vaginal Rings (NuvaRing)</h3>
+                                                <p className="text-xs text-slate-600 leading-relaxed">
+                                                    Continuous systemic absorption from vaginal hormone rings leads to up to <strong>6.5 times higher likelihood</strong> of creating blood clots compared to non-hormonal methods.
+                                                </p>
+                                            </div>
+
+                                            {/* Contraceptive Patches */}
+                                            <div className="bg-white rounded-2xl p-6 border border-brand-400 shadow-sm space-y-3 relative overflow-hidden md:col-span-2 lg:col-span-2">
+                                                <div className="bg-brand-600 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                                                    Highest Risk (Up to 8x Risk)
+                                                </div>
+                                                <h3 className="font-serif font-bold text-xl text-slate-900">Transdermal Patches (Xulane, Twirla, Zafemy)</h3>
+                                                <p className="text-xs text-slate-600 leading-relaxed">
+                                                    Transdermal patches deliver a continuous stream of estrogen directly through the skin, resulting in up to <strong>60% higher total estrogen exposure</strong> in the bloodstream than oral pills—creating up to <strong>8 times higher risk</strong> for DVT and pulmonary embolism.
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    {/* Risk Compounding Checklist */}
+                                    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                                        <h2 className="text-2xl font-serif font-bold text-slate-900">
+                                            Factors That Multiply Your Contraceptive Clot Risk
+                                        </h2>
+                                        <p className="text-slate-600 text-sm">
+                                            If you have any of these overlapping factors, speak with a specialist <em>before</em> initiating hormone-based contraception:
+                                        </p>
+                                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs sm:text-sm pt-2">
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Thrombophilia / APS</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Inherited or acquired blood clotting disorders drastically elevate risk.</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Smoking & Age 35+</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Smoking while on oral estrogen exponentially increases arterial and venous clot events.</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Family History</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Parents or siblings who suffered unprovoked DVTs or strokes at an early age.</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Autoimmune Conditions</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Systemic Lupus Erythematosus (SLE) or persistent inflammation.</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Hypertension & Lipids</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Uncontrolled high blood pressure, high triglycerides, or obesity.</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+                                                <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                                                    <Icon name="check-circle-2" className="w-4 h-4 text-brand-600" />
+                                                    <span>Frequent Long Travel</span>
+                                                </div>
+                                                <p className="text-slate-600 text-xs">Extended flights or long car trips combined with estrogen therapy.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )}
+
+                        {/* FETAL HEALTH TOPIC VIEW */}
+                        {currentPath === 'fetal-health-clot-risks' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                                    
+                                    {/* Hero Banner */}
+                                    <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
+                                        <div className="absolute -top-24 -left-24 w-80 h-80 bg-brand-600/30 rounded-full blur-3xl pointer-events-none"></div>
+                                        <div className="relative z-10 max-w-3xl space-y-4">
+                                            <div className="inline-flex items-center gap-2 bg-brand-950/80 border border-brand-500/40 px-3 py-1 rounded-full text-brand-300 text-xs font-semibold">
+                                                <Icon name="heart" className="w-4 h-4 text-brand-400" />
+                                                <span>Placental & Fetal Health</span>
+                                            </div>
+                                            <h1 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white leading-tight">
+                                                Blood Clots & Fetal Health Outcomes
+                                            </h1>
+                                            <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                                                Maternal blood-clotting disorders can lead to microscopic clots within the placenta, restricting oxygen and nutrient delivery to the developing baby.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Fetal Impact Cards */}
+                                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold">
+                                                <Icon name="alert-triangle" className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">Recurrent Miscarriage</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Thrombophilia (inherited or acquired clotting disorder) is identified in nearly <strong>50% of recurrent miscarriages</strong>, particularly losses occurring after the 10th week of gestation.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold">
+                                                <Icon name="activity" className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">Placental Clotting & Abruption</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Clots formed in the uteroplacental arteries can cause premature placental separation (abruption), leading to severe maternal bleeding and acute fetal distress.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold">
+                                                <Icon name="baby" className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">IUGR (Poor Fetal Growth)</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Intrauterine Growth Restriction occurs when reduced placental perfusion deprives the baby of vital nutrients, potentially causing birth weight deficiencies and developmental delays.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold">
+                                                <Icon name="zap" className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">Pre-Eclampsia</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Gestational hypertension combined with vascular damage causes 1/3 of maternal deaths and is a frequent contributor to emergency premature delivery.
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 md:col-span-2 lg:col-span-2">
+                                            <div className="w-10 h-10 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-bold">
+                                                <Icon name="shield-alert" className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">Stillbirth Prevention & Fetal Kick Tracking</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                During the 3rd trimester, tracking daily fetal movement is a crucial indicator of placental wellbeing. A sudden decrease in fetal kicks can signal compromised placental blood flow. Organizations such as <strong>Count the Kicks</strong> (countthekicks.org) and <strong>Healthy Birth Day</strong> provide vital tracking tools for expectant parents.
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    {/* Survivor Testimonial Box */}
+                                    <div className="bg-slate-900 text-white rounded-2xl p-8 border border-slate-800 space-y-4">
+                                        <div className="text-brand-400 font-bold text-xs uppercase tracking-wider">Survivor & Family Testimonial</div>
+                                        <blockquote className="font-serif italic text-base sm:text-lg text-slate-200 leading-relaxed">
+                                            "She delivered a bright, happy baby girl... If it weren't for doctors who were aware of this blood clotting disorder, this child may never have been born. The challenges of maternal blood clotting issues are vast, but giving women answers saves families."
+                                        </blockquote>
+                                        <div className="text-xs text-slate-400 font-semibold">— Emily Smith, Maternal/Fetal Clotting Survivor</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        )}
+
+                        {/* SHANE'S STORY VIEW */}
+                        {currentPath === 'shanes-story' && (
+                            <div className="py-12 bg-white min-h-screen">
+                                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                                    <div className="border-b border-slate-200 pb-6 space-y-2">
+                                        <div className="text-xs font-bold text-brand-600 uppercase tracking-wider">Memorial & Founding Legacy</div>
+                                        <h1 className="text-3xl sm:text-5xl font-serif font-bold text-slate-900">Shane's Story</h1>
+                                        <p className="text-slate-600 text-base">A tragedy that sparked a national mission to save lives through maternal blood clot awareness.</p>
+                                    </div>
+
+                                    <div className="prose prose-slate max-w-none text-slate-700 space-y-5 text-sm sm:text-base leading-relaxed">
+                                        <p className="text-lg font-medium text-slate-900">
+                                            Shane's story is a tragic, powerful example of the three major blood clotting issues specific to women: blood clots related to hormone-based contraceptives, blood clots during pregnancy and postpartum, and placental clotting impacting fetal health.
+                                        </p>
+                                        <p>
+                                            Established by her loving family, The Shane Foundation exists to ensure no other family endures preventable loss from unrecognized venous thromboembolism (VTE), pulmonary embolism, or placental vascular complications.
+                                        </p>
+                                        
+                                        <div className="bg-brand-50 p-6 rounded-2xl border border-brand-200 space-y-3 my-6">
+                                            <h3 className="font-serif font-bold text-lg text-brand-900">Our Core Pillars in Shane's Memory:</h3>
+                                            <ul className="space-y-2 text-xs sm:text-sm text-brand-950">
+                                                <li className="flex items-start gap-2">
+                                                    <Icon name="check-circle" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                    <span><strong>Patient Education:</strong> Equipping women with clear symptom identification checklists.</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <Icon name="check-circle" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                    <span><strong>Physician Awareness:</strong> Encouraging routine thrombophilia risk assessments prior to prescribing hormonal birth control.</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <Icon name="check-circle" className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                                                    <span><strong>Research & Advocacy:</strong> Funding clinical research into pregnancy-related coagulopathy.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ABOUT PAGE VIEW */}
+                        {currentPath === 'about' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                                    <div className="max-w-3xl">
+                                        <div className="text-xs font-bold text-brand-600 uppercase tracking-wider">Organizational Identity</div>
+                                        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 mt-1">About The Shane Foundation</h1>
+                                        <p className="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                                            The Shane Foundation is a registered 501(c)(3) nonprofit organization dedicated to raising public awareness, supporting scientific research, and protecting women and unborn children from blood clotting disorders.
+                                        </p>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-3 gap-6">
+                                        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-serif font-bold text-xl">RG</div>
+                                            <h3 className="font-serif font-bold text-xl text-slate-900">Roberta Gold</h3>
+                                            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider">Co-Founder</p>
+                                            <p className="text-xs text-slate-600 leading-relaxed">Pioneering maternal blood clot patient advocacy and foundation guidance.</p>
+                                        </div>
+
+                                        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-serif font-bold text-xl">AG</div>
+                                            <h3 className="font-serif font-bold text-xl text-slate-900">Arnold Gold</h3>
+                                            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider">Co-Founder</p>
+                                            <p className="text-xs text-slate-600 leading-relaxed">Dedicated to expanding outreach and medical advisory integration.</p>
+                                        </div>
+
+                                        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <div className="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center font-serif font-bold text-xl">RF</div>
+                                            <h3 className="font-serif font-bold text-xl text-slate-900">Robyn Gold Fener</h3>
+                                            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider">Executive Director</p>
+                                            <p className="text-xs text-slate-600 leading-relaxed">Leading daily operations, educational distribution, and community engagement.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* CONTACT PAGE VIEW */}
+                        {currentPath === 'contact' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                                    <div className="text-center space-y-2">
+                                        <h1 className="text-3xl font-serif font-bold text-slate-900">Contact Us or Share Your Story</h1>
+                                        <p className="text-slate-600 text-sm">Have a question or want to share your experience with maternal clotting disorders? We are here to listen.</p>
+                                    </div>
+
+                                    {contactSubmitted ? (
+                                        <div className="bg-emerald-50 border border-emerald-200 p-8 rounded-2xl text-emerald-900 space-y-3 text-center">
+                                            <Icon name="check-circle" className="w-12 h-12 text-emerald-600 mx-auto" />
+                                            <h3 className="font-serif font-bold text-2xl">Thank You! Your Message Has Been Received.</h3>
+                                            <p className="text-xs text-emerald-800">Our advocacy team will review your message and reach out shortly.</p>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={(e) => { e.preventDefault(); setContactSubmitted(true); trackConversion('contact_form_submit'); }} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+                                            <div className="grid sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                                                    <input required type="text" placeholder="Jane Doe" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+                                                    <input required type="email" placeholder="jane@example.com" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-700 mb-1">Topic</label>
+                                                <select className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                                    <option>General Inquiry</option>
+                                                    <option>Sharing Personal / Family Story</option>
+                                                    <option>Educational Materials Request</option>
+                                                    <option>Media or Partnership Inquiry</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-700 mb-1">Your Message or Story</label>
+                                                <textarea required rows="5" placeholder="Share your message or story with us..." className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                                            </div>
+                                            <button type="submit" className="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow">
+                                                SUBMIT MESSAGE
+                                            </button>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* RESEARCH VIEW */}
+                        {currentPath === 'research' && (
+                            <div className="py-12 bg-slate-50 min-h-screen">
+                                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                                    <div className="max-w-3xl">
+                                        <div className="text-xs font-bold text-brand-600 uppercase tracking-wider">Scientific Progress</div>
+                                        <h1 className="text-3xl font-serif font-bold text-slate-900 mt-1">Research & Clinical Initiatives</h1>
+                                        <p className="text-slate-600 text-sm mt-1">Supporting research studies, thrombophilia prophylaxis, and evidence-based clinical protocols in maternal health.</p>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">TIPPS Study Integration</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Synthesizing findings from the Thrombophilia in Pregnancy Prophylaxis Study (TIPPS) regarding Low Molecular Weight Heparin (LMWH) administration in pregnant patients with thrombophilia.
+                                            </p>
+                                        </div>
+                                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                                            <h3 className="font-serif font-bold text-lg text-slate-900">ACOG Clinical Guidance</h3>
+                                            <p className="text-xs text-slate-600 leading-relaxed">
+                                                Aligning patient education with the American College of Obstetricians and Gynecologists (ACOG) guidelines on screening for inherited thrombophilias in obstetrics.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                    </main>
+
+                    {donateModalOpen && (
+                        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+                            <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
+                                <button onClick={() => setDonateModalOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                                    <Icon name="x" className="w-5 h-5" />
+                                </button>
+                                <div className="text-center space-y-2">
+                                    <h3 className="font-serif font-bold text-2xl text-slate-900">Support The Shane Foundation</h3>
+                                    <p className="text-xs text-slate-600">Your tax-deductible contribution funds maternal blood clot education.</p>
+                                </div>
+                                <div className="space-y-4">
+                                    <button onClick={() => { setDonationSuccess(true); trackConversion('donation_completed', { amount: 50 }); setDonateModalOpen(false); }} className="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl text-sm">
+                                        COMPLETE DONATION (DEMO)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {}
+                    <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 text-xs mt-auto">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-slate-800 items-center">
+                                <div className="md:col-span-7 space-y-2">
+                                    <div className="font-serif font-bold text-white text-base tracking-tight">THE SHANE FOUNDATION</div>
+                                    <p className="text-slate-400 text-xs leading-relaxed max-w-lg">
+                                        Raising awareness, fostering patient advocacy, and supporting research for blood clotting disorders related to pregnancy, postpartum care, and hormone-based contraceptives.
+                                    </p>
+                                </div>
+                                <div className="md:col-span-5 flex flex-col md:items-end gap-3">
+                                    <span className="text-slate-300 font-semibold text-xs tracking-wider uppercase">Connect With Us</span>
+                                    <div className="flex items-center gap-3">
+                                        <a 
+                                            href="https://www.facebook.com/profile.php?id=61560101334852" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="p-2.5 bg-slate-800 hover:bg-brand-600 text-slate-300 hover:text-white rounded-xl transition-all duration-200 border border-slate-700/60 flex items-center gap-2 group shadow-sm"
+                                            aria-label="Facebook Page">
+                                            <Icon name="facebook" className="w-4 h-4 fill-current" />
+                                            <span className="text-xs font-medium">Facebook</span>
+                                        </a>
+                                        <a 
+                                            href="https://www.instagram.com/theshanefoundation/" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="p-2.5 bg-slate-800 hover:bg-brand-600 text-slate-300 hover:text-white rounded-xl transition-all duration-200 border border-slate-700/60 flex items-center gap-2 group shadow-sm"
+                                            aria-label="Instagram Profile">
+                                            <Icon name="instagram" className="w-4 h-4" />
+                                            <span className="text-xs font-medium">Instagram</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-[11px] pt-8">
+                                <div>&copy; {new Date().getFullYear()} The Shane Foundation. All rights reserved. 501(c)(3) Nonprofit Organization.</div>
+                                <div className="flex gap-4">
+                                    <span>Educational Disclaimer</span>
+                                    <span>Privacy Policy</span>
+                                    <span>Terms of Service</span>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
